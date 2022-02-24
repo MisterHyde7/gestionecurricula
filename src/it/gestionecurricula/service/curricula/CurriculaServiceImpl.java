@@ -139,13 +139,7 @@ public class CurriculaServiceImpl implements CurriculaService {
 	}
 
 	@Override
-	public int inserisciNuovaEsperienzaAlCurriculum(Esperienza input) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int rimuoviCurriculumDaDatabase(Esperienza input) throws Exception {
+	public int rimuoviCurriculumDaDatabase(CurriculaService curriculaService, Esperienza input) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}

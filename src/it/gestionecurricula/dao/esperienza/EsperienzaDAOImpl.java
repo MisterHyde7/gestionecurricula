@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import it.gestionecurricula.dao.AbstractMySQLDAO;
@@ -93,7 +94,7 @@ public class EsperienzaDAOImpl extends AbstractMySQLDAO implements EsperienzaDAO
 				"INSERT INTO esperienza (descrizione, dataInizio, dataFine, conoscenzeAcquisite) VALUES (?, ?, ?, ?);")) {
 			ps.setString(1, esperienzaInput.getDescrizione());
 			ps.setDate(2, new java.sql.Date(esperienzaInput.getDataInizio().getTime()));
-			ps.setDate(3, new java.sql.Date(esperienzaInput.getDataFine().getTime()));
+			ps.setDate(3, new java.sql.Date(esperienzaInput.getDataInizio().getTime()));
 			ps.setString(4, esperienzaInput.getConoscenzeAcquisite());
 			result = ps.executeUpdate();
 		} catch (Exception e) {
@@ -117,7 +118,7 @@ public class EsperienzaDAOImpl extends AbstractMySQLDAO implements EsperienzaDAO
 				"UPDATE esperienza SET descrizione=?, dataInizio=?, dataFine=?, conoscenzeAcquisite=? where id=?;")) {
 			ps.setString(1, esperienzaInput.getDescrizione());
 			ps.setDate(2, new java.sql.Date(esperienzaInput.getDataInizio().getTime()));
-			ps.setDate(3, new java.sql.Date(esperienzaInput.getDataFine().getTime()));
+			ps.setDate(3, new java.sql.Date(esperienzaInput.getDataInizio().getTime()));
 			ps.setString(4, esperienzaInput.getConoscenzeAcquisite());
 			ps.setLong(5, esperienzaInput.getId());
 			result = ps.executeUpdate();
@@ -171,8 +172,8 @@ public class EsperienzaDAOImpl extends AbstractMySQLDAO implements EsperienzaDAO
 			query += " and dataInizio = '" + example.getDataInizio() + "' ";
 		}
 
-		if (example.getDataFine() != null) {
-			query += " and dataFine = '" + example.getDataFine() + "' ";
+		if (example.getDataInizio() != null) {
+			query += " and dataFine = '" + example.getDataInizio() + "' ";
 		}
 
 		try (Statement ps = connection.createStatement()) {
@@ -187,6 +188,59 @@ public class EsperienzaDAOImpl extends AbstractMySQLDAO implements EsperienzaDAO
 				esperienzaTemp.setId(rs.getLong("ID"));
 				result.add(esperienzaTemp);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return result;
+	}
+
+	@Override
+	public List<Date> cercaEsperienzePassate(Esperienza input) throws Exception {
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		ArrayList<Date> result = new ArrayList<Date>();
+		Date dataFineTemp = new Date();
+
+		try (PreparedStatement ps = connection
+				.prepareStatement("select dataFine from esperienza inner join curricula on ? = curricula.id;")) {
+
+			ps.setLong(1, input.getCurriculum().getId());
+
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					dataFineTemp = new Date();
+
+					dataFineTemp = (rs.getDate("dataFine"));
+
+					result.add(dataFineTemp);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+			return result;
+		}
+	}
+
+	@Override
+	public int aggiornaFineEsperienza(Esperienza input) throws Exception {
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		if (input == null || input.getId() == null || input.getId() < 1)
+			throw new Exception("Valore di input non ammesso.");
+
+		int result = 0;
+		try (PreparedStatement ps = connection.prepareStatement(
+				"UPDATE esperienza SET dataFine=? where id=?;")) {
+			
+			ps.setDate(1, new java.sql.Date(input.getDataInizio().getTime()));
+			ps.setLong(2, input.getId());
+			result = ps.executeUpdate();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

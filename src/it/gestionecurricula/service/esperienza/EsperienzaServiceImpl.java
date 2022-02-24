@@ -2,12 +2,14 @@ package it.gestionecurricula.service.esperienza;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import it.gestionecurricula.connection.MyConnection;
 import it.gestionecurricula.dao.Constants;
 import it.gestionecurricula.dao.esperienza.EsperienzaDAO;
 import it.gestionecurricula.model.Esperienza;
+import it.gestionecurricula.service.curricula.CurriculaService;
 
 public class EsperienzaServiceImpl implements EsperienzaService {
 
@@ -135,6 +137,41 @@ public class EsperienzaServiceImpl implements EsperienzaService {
 			throw e;
 		}
 		return result;
+	}
+
+	@Override
+	public int inserisciNuovaEsperienzaAlCurriculum(Esperienza input, CurriculaService curriculaService)
+			throws Exception {
+		List<Date> result = new ArrayList<Date>();
+		int inserimento = 0;
+		try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL)) {
+
+			esperienzaDao.setConnection(connection);
+
+			result = esperienzaDao.cercaEsperienzePassate(input);
+
+			if (result.get(result.size() - 1).compareTo(input.getDataInizio()) > 0) {
+				throw new RuntimeException("esperienza ancora in corso");
+			}
+
+			if (result.get(result.size() - 1).compareTo(input.getDataInizio()) == 0
+					|| result.get(result.size() - 1).compareTo(input.getDataInizio()) < 0) {
+				if (esperienzaDao.insert(input) != 1)
+					throw new RuntimeException("errore");
+			}
+
+			if (result.get(result.size() - 1) == null) {
+				if (esperienzaDao.insert(input) != 1)
+					throw new RuntimeException("errore");
+			}
+
+			inserimento++;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return inserimento;
 	}
 
 }

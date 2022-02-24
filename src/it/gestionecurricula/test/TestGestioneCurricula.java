@@ -25,6 +25,8 @@ public class TestGestioneCurricula {
 
 			testRemoveEsperienza(esperienzaService);
 
+			testInserisciNuovaEsperienza(esperienzaService, curriculaService);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -82,6 +84,24 @@ public class TestGestioneCurricula {
 		Esperienza toBeRemoved = esperienzaService.findById(idDelPrimo);
 		if (esperienzaService.rimuovi(toBeRemoved) != 1)
 			throw new RuntimeException("testRimozioneUser FAILED ");
+		System.out.println("======= Fine test =======");
+	}
+
+	public static void testInserisciNuovaEsperienza(EsperienzaService esperienzaService,
+			CurriculaService curriculaService) throws Exception {
+		System.out.println("======= Inizio test =======");
+		List<Curricula> listaDiCurriculumPresenti = curriculaService.listAll();
+		if (listaDiCurriculumPresenti == null)
+			throw new RuntimeException("ERRORE");
+		Esperienza nuovaEsperienza = new Esperienza(3L, "test nuova esperienza", new java.util.Date(2022, 01, 01),
+				new java.util.Date(2022, 02, 28), "test conoscenze");
+		Curricula nuovaCurricula = new Curricula(7L, "test curricula", "test curricula",
+				new java.util.Date(2000, 01, 01), "123456789", "test@test.it");
+		curriculaService.inserisciNuovo(nuovaCurricula);
+		nuovaEsperienza.setCurriculum(curriculaService
+				.findById(curriculaService.listAll().get(curriculaService.listAll().size() - 1).getId()));
+		if (esperienzaService.inserisciNuovaEsperienzaAlCurriculum(nuovaEsperienza, curriculaService) < 0)
+			throw new RuntimeException("ERRORE");
 		System.out.println("======= Fine test =======");
 	}
 

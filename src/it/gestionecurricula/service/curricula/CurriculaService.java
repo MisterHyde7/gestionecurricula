@@ -23,8 +23,6 @@ public interface CurriculaService {
 
 	public List<Curricula> findByExample(Curricula input) throws Exception;
 
-	public int inserisciNuovaEsperienzaAlCurriculum(Esperienza input) throws Exception;
-
-	public int rimuoviCurriculumDaDatabase(Esperienza input) throws Exception;
+	public int rimuoviCurriculumDaDatabase(CurriculaService curriculaService, Esperienza input) throws Exception;
 
 }
