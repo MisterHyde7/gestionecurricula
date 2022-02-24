@@ -23,6 +23,8 @@ public class TestGestioneCurricula {
 
 			testInsertEsperienza(esperienzaService);
 
+			testRemoveEsperienza(esperienzaService);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,6 +67,21 @@ public class TestGestioneCurricula {
 				new java.util.Date(2022, 03, 01), "test conoscenze acquisite");
 		if (esperienzaService.inserisciNuovo(nuovaCurricula) != 1)
 			throw new RuntimeException("ERRORE");
+		System.out.println("======= Fine test =======");
+	}
+
+	private static void testRemoveEsperienza(EsperienzaService esperienzaService) throws Exception {
+		System.out.println("======= Inizio test =======");
+		List<Esperienza> listaDiCurriculumPresenti = esperienzaService.listAll();
+		if (listaDiCurriculumPresenti == null)
+			throw new RuntimeException("ERRORE");
+		List<Esperienza> interoContenutoTabella = esperienzaService.listAll();
+		if (interoContenutoTabella.isEmpty() || interoContenutoTabella.get(0) == null)
+			throw new Exception("Non ho nulla da rimuovere");
+		Long idDelPrimo = interoContenutoTabella.get(0).getId();
+		Esperienza toBeRemoved = esperienzaService.findById(idDelPrimo);
+		if (esperienzaService.rimuovi(toBeRemoved) != 1)
+			throw new RuntimeException("testRimozioneUser FAILED ");
 		System.out.println("======= Fine test =======");
 	}
 
