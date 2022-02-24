@@ -17,6 +17,8 @@ public class TestGestioneCurricula {
 		try {
 
 			testInsertCurricula(curriculaService);
+			
+			testRemoveCurricula(curriculaService);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -32,6 +34,20 @@ public class TestGestioneCurricula {
 		Curricula nuovaCurricula = new Curricula(1L, "test curricula insert", "test curricula insert",
 				new java.util.Date(2000, 01, 01), "123456789", "test@test.it");
 		if (curriculaService.inserisciNuovo(nuovaCurricula) != 1)
+			throw new RuntimeException("ERRORE");
+		System.out.println("======= Fine test =======");
+	}
+
+	private static void testRemoveCurricula(CurriculaService curriculaService) throws Exception {
+		System.out.println("======= Inizio test =======");
+		List<Curricula> listaDiCurriculumPresenti = curriculaService.listAll();
+		if (listaDiCurriculumPresenti == null)
+			throw new RuntimeException("ERRORE");
+		Curricula nuovaCurricula = new Curricula(2L, "test curricula remove", "test curricula remove",
+				new java.util.Date(2000, 01, 01), "123456789", "test@test.it");
+		if (curriculaService.inserisciNuovo(nuovaCurricula) != 1)
+			throw new RuntimeException("ERRORE");
+		if (curriculaService.rimuovi(nuovaCurricula) != 1)
 			throw new RuntimeException("ERRORE");
 		System.out.println("======= Fine test =======");
 	}
