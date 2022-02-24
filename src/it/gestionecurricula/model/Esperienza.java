@@ -15,6 +15,15 @@ public class Esperienza {
 		super();
 	}
 
+	public Esperienza(Long id, String descrizione, Date dataInizio, Date dataFine, String conoscenzeAcquisite) {
+		super();
+		this.id = id;
+		this.descrizione = descrizione;
+		this.dataInizio = dataInizio;
+		this.dataFine = dataFine;
+		this.conoscenzeAcquisite = conoscenzeAcquisite;
+	}
+
 	public Esperienza(Long id, String descrizione, Date dataInizio, Date dataFine, String conoscenzeAcquisite,
 			Curricula curricula) {
 		super();

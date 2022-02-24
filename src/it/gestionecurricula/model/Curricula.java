@@ -17,6 +17,15 @@ public class Curricula {
 		super();
 	}
 
+	public Curricula(String nome, String cognome, Date dataDiNascita, String telefono, String email) {
+		super();
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataDiNascita = dataDiNascita;
+		this.telefono = telefono;
+		this.email = email;
+	}
+
 	public Curricula(Long id, String nome, String cognome, Date dataDiNascita, String telefono, String email) {
 		super();
 		this.id = id;
