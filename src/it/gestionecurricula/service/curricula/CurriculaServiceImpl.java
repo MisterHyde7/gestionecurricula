@@ -8,12 +8,13 @@ import it.gestionecurricula.connection.MyConnection;
 import it.gestionecurricula.dao.Constants;
 import it.gestionecurricula.dao.curricula.CurriculaDAO;
 import it.gestionecurricula.model.Curricula;
+import it.gestionecurricula.model.Esperienza;
 
 public class CurriculaServiceImpl implements CurriculaService {
 
 	private CurriculaDAO curriculaDao;
 
-	public void setUserDao(CurriculaDAO curriculaDao) {
+	public void setCurriculaDao(CurriculaDAO curriculaDao) {
 		this.curriculaDao = curriculaDao;
 	}
 
@@ -138,9 +139,15 @@ public class CurriculaServiceImpl implements CurriculaService {
 	}
 
 	@Override
-	public void setCurriculaDao(CurriculaDAO curriculaDao) {
+	public int inserisciNuovaEsperienzaAlCurriculum(Esperienza input) throws Exception {
 		// TODO Auto-generated method stub
-		
+		return 0;
+	}
+
+	@Override
+	public int rimuoviCurriculumDaDatabase(Esperienza input) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
