@@ -105,4 +105,17 @@ public class TestGestioneCurricula {
 		System.out.println("======= Fine test =======");
 	}
 
+	private static void testRimuoviCurriculumSeVuoto(CurriculaService curriculaService) throws Exception {
+		System.out.println("======= Inizio test =======");
+		List<Curricula> listaDiCurriculumPresenti = curriculaService.listAll();
+		if (listaDiCurriculumPresenti == null)
+			throw new RuntimeException("ERRORE");
+		Curricula nuovaCurricula = new Curricula(100L, "test remove curricula", "test remove curricula",
+				new java.util.Date(2000, 01, 01), "123456789", "test@test.it");
+		curriculaService.inserisciNuovo(nuovaCurricula);
+		if (curriculaService.rimuoviCurriculumDaDatabase(curriculaService, nuovaCurricula) != 1)
+			throw new RuntimeException("ERRORE");
+		System.out.println("======= Fine test =======");
+	}
+
 }

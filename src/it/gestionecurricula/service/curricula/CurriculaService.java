@@ -4,7 +4,6 @@ import java.util.List;
 
 import it.gestionecurricula.dao.curricula.CurriculaDAO;
 import it.gestionecurricula.model.Curricula;
-import it.gestionecurricula.model.Esperienza;
 
 public interface CurriculaService {
 
@@ -23,6 +22,6 @@ public interface CurriculaService {
 
 	public List<Curricula> findByExample(Curricula input) throws Exception;
 
-	public int rimuoviCurriculumDaDatabase(CurriculaService curriculaService, Esperienza input) throws Exception;
+	public int rimuoviCurriculumDaDatabase(CurriculaService curriculaService, Curricula input) throws Exception;
 
 }

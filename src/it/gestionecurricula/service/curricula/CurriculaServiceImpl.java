@@ -8,7 +8,6 @@ import it.gestionecurricula.connection.MyConnection;
 import it.gestionecurricula.dao.Constants;
 import it.gestionecurricula.dao.curricula.CurriculaDAO;
 import it.gestionecurricula.model.Curricula;
-import it.gestionecurricula.model.Esperienza;
 
 public class CurriculaServiceImpl implements CurriculaService {
 
@@ -139,9 +138,27 @@ public class CurriculaServiceImpl implements CurriculaService {
 	}
 
 	@Override
-	public int rimuoviCurriculumDaDatabase(CurriculaService curriculaService, Esperienza input) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+	public int rimuoviCurriculumDaDatabase(CurriculaService curriculaService, Curricula input) throws Exception {
+		int esitoRimozione = 0;
+		try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL)) {
+
+			// inietto la connection nel dao
+			curriculaDao.setConnection(connection);
+
+			if (curriculaDao.list().get(curriculaDao.list().size() - 1).getListaDiEsperienze()
+					.size() != 0)
+				throw new RuntimeException("esperienze presenti");
+
+			if (curriculaDao.delete(input) != 0)
+				throw new RuntimeException("ERRORE");
+			
+			esitoRimozione++;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return esitoRimozione;
 	}
 
 }
