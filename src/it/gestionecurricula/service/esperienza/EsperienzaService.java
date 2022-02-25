@@ -2,14 +2,16 @@ package it.gestionecurricula.service.esperienza;
 
 import java.util.List;
 
+import it.gestionecurricula.dao.curricula.CurriculaDAO;
 import it.gestionecurricula.dao.esperienza.EsperienzaDAO;
 import it.gestionecurricula.model.Esperienza;
-import it.gestionecurricula.service.curricula.CurriculaService;
 
 public interface EsperienzaService {
 
 	// questo mi serve per injection
 	public void setEsperienzaDao(EsperienzaDAO esperienzaDao);
+
+	public void setCurriculaDao(CurriculaDAO curriculaDao);
 
 	public List<Esperienza> listAll() throws Exception;
 
@@ -23,7 +25,6 @@ public interface EsperienzaService {
 
 	public List<Esperienza> findByExample(Esperienza input) throws Exception;
 
-	public int inserisciNuovaEsperienzaAlCurriculum(Esperienza input, CurriculaService curriculaService)
-			throws Exception;
+	public int inserisciNuovaEsperienzaAlCurriculum(Esperienza input, Long id) throws Exception;
 
 }

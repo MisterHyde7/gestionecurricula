@@ -58,6 +58,10 @@ public class Esperienza {
 	public void setDataInizio(Date dataInizio) {
 		this.dataInizio = dataInizio;
 	}
+	
+	public Date getDataFine() {
+		return dataFine;
+	}
 
 	public void setDataFine(Date dataFine) {
 		this.dataFine = dataFine;

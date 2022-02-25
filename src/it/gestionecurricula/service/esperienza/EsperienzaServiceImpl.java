@@ -2,21 +2,26 @@ package it.gestionecurricula.service.esperienza;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import it.gestionecurricula.connection.MyConnection;
 import it.gestionecurricula.dao.Constants;
+import it.gestionecurricula.dao.curricula.CurriculaDAO;
 import it.gestionecurricula.dao.esperienza.EsperienzaDAO;
 import it.gestionecurricula.model.Esperienza;
-import it.gestionecurricula.service.curricula.CurriculaService;
 
 public class EsperienzaServiceImpl implements EsperienzaService {
 
 	private EsperienzaDAO esperienzaDao;
 
+	private CurriculaDAO curriculaDao;
+
 	public void setEsperienzaDao(EsperienzaDAO esperienzaDao) {
 		this.esperienzaDao = esperienzaDao;
+	}
+
+	public void setCurriculaDao(CurriculaDAO curriculaDao) {
+		this.curriculaDao = curriculaDao;
 	}
 
 	@Override
@@ -140,27 +145,36 @@ public class EsperienzaServiceImpl implements EsperienzaService {
 	}
 
 	@Override
-	public int inserisciNuovaEsperienzaAlCurriculum(Esperienza input, CurriculaService curriculaService)
-			throws Exception {
-		List<Date> result = new ArrayList<Date>();
+	public int inserisciNuovaEsperienzaAlCurriculum(Esperienza input, Long id) throws Exception {
+
 		int inserimento = 0;
 		try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL)) {
 
 			esperienzaDao.setConnection(connection);
 
-			result = esperienzaDao.cercaEsperienzePassate(input);
+			curriculaDao.setConnection(connection);
 
-			if (result.get(result.size() - 1).compareTo(input.getDataInizio()) > 0) {
+			if (curriculaDao.get(id) == null)
+				throw new RuntimeException("errore");
+
+			if (curriculaDao.get(id).getListaDiEsperienze().get(curriculaDao.get(id).getListaDiEsperienze().size() - 1)
+					.getDataFine().compareTo(input.getDataInizio()) > 0) {
 				throw new RuntimeException("esperienza ancora in corso");
 			}
 
-			if (result.get(result.size() - 1).compareTo(input.getDataInizio()) == 0
-					|| result.get(result.size() - 1).compareTo(input.getDataInizio()) < 0) {
+			if (curriculaDao.get(id).getListaDiEsperienze().get(curriculaDao.get(id).getListaDiEsperienze().size() - 1)
+					.getDataFine().compareTo(input.getDataInizio()) == 0
+					|| curriculaDao.get(id).getListaDiEsperienze()
+							.get(curriculaDao.get(id).getListaDiEsperienze().size() - 1).getDataFine()
+							.compareTo(input.getDataInizio()) < 0) {
 				if (esperienzaDao.insert(input) != 1)
 					throw new RuntimeException("errore");
 			}
 
-			if (result.get(result.size() - 1) == null) {
+			if (curriculaDao.get(id).getListaDiEsperienze().get(curriculaDao.get(id).getListaDiEsperienze().size() - 1)
+					.getDataFine() == null) {
+				if (esperienzaDao.update(input) != 1)
+					throw new RuntimeException("errore");
 				if (esperienzaDao.insert(input) != 1)
 					throw new RuntimeException("errore");
 			}

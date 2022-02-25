@@ -132,17 +132,17 @@ public class CurriculaDAOImpl extends AbstractMySQLDAO implements CurriculaDAO {
 	}
 
 	@Override
-	public int delete(Curricula esperienzaInput) throws Exception {
+	public int delete(Curricula curriculaInput) throws Exception {
 		// prima di tutto cerchiamo di capire se possiamo effettuare le operazioni
 		if (isNotActive())
 			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
 
-		if (esperienzaInput == null || esperienzaInput.getId() == null || esperienzaInput.getId() < 1)
+		if (curriculaInput == null || curriculaInput.getId() == null || curriculaInput.getId() < 1)
 			throw new Exception("Valore di input non ammesso.");
 
 		int result = 0;
 		try (PreparedStatement ps = connection.prepareStatement("DELETE FROM curricula WHERE ID=?")) {
-			ps.setLong(1, esperienzaInput.getId());
+			ps.setLong(1, curriculaInput.getId());
 			result = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();

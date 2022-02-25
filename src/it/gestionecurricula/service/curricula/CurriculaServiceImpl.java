@@ -7,11 +7,19 @@ import java.util.List;
 import it.gestionecurricula.connection.MyConnection;
 import it.gestionecurricula.dao.Constants;
 import it.gestionecurricula.dao.curricula.CurriculaDAO;
+import it.gestionecurricula.dao.esperienza.EsperienzaDAO;
 import it.gestionecurricula.model.Curricula;
+import it.gestionecurricula.model.Esperienza;
 
 public class CurriculaServiceImpl implements CurriculaService {
 
 	private CurriculaDAO curriculaDao;
+	
+	private EsperienzaDAO esperienzaDao;
+
+	public void setEsperienzaDao(EsperienzaDAO esperienzaDao) {
+		this.esperienzaDao = esperienzaDao;
+	}
 
 	public void setCurriculaDao(CurriculaDAO curriculaDao) {
 		this.curriculaDao = curriculaDao;
@@ -145,13 +153,14 @@ public class CurriculaServiceImpl implements CurriculaService {
 			// inietto la connection nel dao
 			curriculaDao.setConnection(connection);
 
-			if (curriculaDao.list().get(curriculaDao.list().size() - 1).getListaDiEsperienze()
-					.size() != 0)
+			List<Esperienza> nuovaList = new ArrayList<>();
+			curriculaDao.list().get(curriculaDao.list().size() - 1).setListaDiEsperienze(nuovaList);
+			if (!(curriculaDao.list().get(curriculaDao.list().size() - 1).getListaDiEsperienze().isEmpty()))
 				throw new RuntimeException("esperienze presenti");
 
-			if (curriculaDao.delete(input) != 0)
+			if (curriculaDao.delete(input) != 1)
 				throw new RuntimeException("ERRORE");
-			
+
 			esitoRimozione++;
 
 		} catch (Exception e) {

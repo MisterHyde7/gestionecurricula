@@ -1,5 +1,6 @@
 package it.gestionecurricula.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.gestionecurricula.model.Curricula;
@@ -26,6 +27,8 @@ public class TestGestioneCurricula {
 			testRemoveEsperienza(esperienzaService);
 
 			testInserisciNuovaEsperienza(esperienzaService, curriculaService);
+
+			testRimuoviCurriculumSeVuoto(curriculaService);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -100,7 +103,7 @@ public class TestGestioneCurricula {
 		curriculaService.inserisciNuovo(nuovaCurricula);
 		nuovaEsperienza.setCurriculum(curriculaService
 				.findById(curriculaService.listAll().get(curriculaService.listAll().size() - 1).getId()));
-		if (esperienzaService.inserisciNuovaEsperienzaAlCurriculum(nuovaEsperienza, curriculaService) < 0)
+		if (esperienzaService.inserisciNuovaEsperienzaAlCurriculum(nuovaEsperienza, nuovaCurricula.getId()) < 0)
 			throw new RuntimeException("ERRORE");
 		System.out.println("======= Fine test =======");
 	}
@@ -112,7 +115,9 @@ public class TestGestioneCurricula {
 			throw new RuntimeException("ERRORE");
 		Curricula nuovaCurricula = new Curricula(100L, "test remove curricula", "test remove curricula",
 				new java.util.Date(2000, 01, 01), "123456789", "test@test.it");
-		curriculaService.inserisciNuovo(nuovaCurricula);
+		nuovaCurricula.setListaDiEsperienze(new ArrayList<Esperienza>());
+		if (curriculaService.inserisciNuovo(nuovaCurricula) != 1)
+			throw new RuntimeException("ERRORE");
 		if (curriculaService.rimuoviCurriculumDaDatabase(curriculaService, nuovaCurricula) != 1)
 			throw new RuntimeException("ERRORE");
 		System.out.println("======= Fine test =======");
